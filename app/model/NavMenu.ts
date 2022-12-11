@@ -14,6 +14,6 @@ export default class NavMenu extends Model {
   @Column({type: DataType.STRING})
   path!: string
 
-  @Column({type: DataType.STRING})
-  is_show!: string
+  @Column({type: DataType.BOOLEAN})
+  is_show!: boolean
 }

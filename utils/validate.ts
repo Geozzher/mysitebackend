@@ -14,9 +14,10 @@ async function validate<T extends Values>(ctx: Context, rules: Rules, flag: bool
 
   switch (ctx.method) {
     case "GET":
+      data = getQueryData(ctx)
       break;
     case "POST":
-      data = getFormatData(ctx)
+      data = getPostData(ctx)
       break
     case "DELETE":
       break
@@ -30,7 +31,7 @@ async function validate<T extends Values>(ctx: Context, rules: Rules, flag: bool
   }).catch(err => {
     if (flag) {
       return {
-        error: err.errors[0].message,
+        error: err?.errors[0].message || err,
         data: {} as T
       }
     } else {
@@ -43,8 +44,12 @@ async function validate<T extends Values>(ctx: Context, rules: Rules, flag: bool
 }
 
 
-function getFormatData(ctx: Context) {
-  return ctx.request.body
+function getPostData(ctx: Context) {
+  return {...ctx.request.body}
+}
+
+function getQueryData(ctx: Context) {
+  return {...ctx.request.query}
 }
 
 export default validate

@@ -14,7 +14,7 @@ export default class Tag extends Model {
   @Column({type: DataType.STRING})
   color!: string
 
-  @Column({type: DataType.STRING})
-  is_show!: string
+  @Column({type: DataType.BOOLEAN})
+  is_show!: boolean
 
 }
