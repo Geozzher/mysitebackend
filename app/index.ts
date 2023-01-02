@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import path from "path";
+const envPath = process.env.NODE_ENV === 'production' ? '../env.remote': '../env'
 const envConfig = dotenv.config({
-  path: path.resolve(__dirname, '../.env'), // 配置文件路径
+  path: path.resolve(__dirname, envPath), // 配置文件路径
   encoding: 'utf8', // 编码方式，默认utf8
   debug: false, // 是否开启debug，默认false
 }).parsed;
