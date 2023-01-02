@@ -1,6 +1,7 @@
 import {Context} from "koa";
 import {fail, pageInfoSuccess, success} from "../../utils/response";
 import NavMenuService from "../service/NavMenuService";
+import StatisticService from "../service/StatisticService";
 import validator from "../../utils/validate";
 import {
   IAddNavMenuParams,
@@ -10,6 +11,7 @@ import {
   IPageInfoParams,
   IPageInfoRules,
 } from "../constant/rules";
+import {T_B_MAIN_PAGE} from "../constant/tracertsMap";
 
 class NavMenuController {
   /**
@@ -17,6 +19,8 @@ class NavMenuController {
    * @param ctx
    */
   async getForFront(ctx: Context) {
+    // @ts-ignore 首页访问
+    await StatisticService.updateViewCounts(T_B_MAIN_PAGE)
     const menus = await NavMenuService.getForFront();
     success(ctx, menus);
   }

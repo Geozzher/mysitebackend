@@ -8,6 +8,8 @@ import {
   IPageInfoParams, IPageInfoRules,
   ISetArticleParams, ISetArticleRules,
 } from "../constant/rules";
+import StatisticService from "../service/StatisticService";
+import {T_B_ARTICLE_DETAIL, T_B_ARTICLE_LIST} from "../constant/tracertsMap";
 
 class ArticleController {
   /**
@@ -17,6 +19,9 @@ class ArticleController {
   async getListForFront(ctx: Context) {
     const {data, error} = await validator<IPageInfoParams>(ctx, IPageInfoRules);
     if (error !== null) return fail(ctx, error);
+    // 文章列表访问
+    await StatisticService.updateViewCounts(T_B_ARTICLE_LIST);
+
     const {current, pageSize} = data;
     const articleList = await ArticleService.getListForFront(Number(current), Number(pageSize));
     const total = await ArticleService.countRecords()
@@ -45,6 +50,8 @@ class ArticleController {
     const {data, error} = await validator<IGetArticleDetailParams>(ctx, IGetArticleDetailRules);
     if (error !== null) return fail(ctx, error);
     const {id} = data;
+    // 文章详情页访问
+    await StatisticService.updateViewCounts(T_B_ARTICLE_DETAIL);
 
     const articleDetail = await ArticleService.getDetail(id);
     success(ctx, articleDetail);
@@ -66,6 +73,16 @@ class ArticleController {
     if (error !== null) return fail(ctx, error);
 
     const [affectRows] = await ArticleService.setArticle(data);
+    if (!affectRows) return fail(ctx);
+    success(ctx);
+  }
+
+  async updateViews(ctx: Context) {
+    // 参数校验
+    const {data, error} = await validator<IGetArticleDetailParams>(ctx, IGetArticleDetailRules);
+    if (error !== null) return fail(ctx, error);
+
+    const [affectRows] = await ArticleService.updateViews(data);
     if (!affectRows) return fail(ctx);
     success(ctx);
   }

@@ -36,9 +36,8 @@ class NavMenuService {
    * @param is_show
    */
   addNavMenu(name: string, label: string, path: string, is_show: boolean) {
-    const id = getTimeStamps();
+    // const id = getTimeStamps();
     return NavMenu.create({
-      id,
       name,
       label,
       path,

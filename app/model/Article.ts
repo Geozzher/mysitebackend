@@ -2,7 +2,7 @@ import {Column, DataType, Model, Table} from "sequelize-typescript";
 
 @Table
 export default class Article extends Model {
-  @Column({primaryKey: true, type: DataType.INTEGER, autoIncrement: false})
+  @Column({primaryKey: true, type: DataType.INTEGER, autoIncrement: true})
   id!: string
 
   @Column({primaryKey: true, type: DataType.STRING})
@@ -11,17 +11,17 @@ export default class Article extends Model {
   @Column({type: DataType.STRING})
   introduce!: string
 
-  @Column({type: DataType.STRING})
-  types!: string
+  @Column({type: DataType.JSON})
+  types!: object
 
-  @Column({type: DataType.STRING})
-  tags!: string
+  @Column({type: DataType.JSON})
+  tags!: object
 
   @Column({type: DataType.STRING})
   cover!: string
 
   @Column({type: DataType.TEXT})
-  content!: string
+  content_raw!: string
 
   @Column({type: DataType.TEXT})
   content_html!: string

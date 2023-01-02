@@ -8,10 +8,10 @@ const IArticleRules = {
   id: [new MakeRule("id").required().range(20).get()],
   title: [new MakeRule("title").required().range(50).get()],
   introduce: [new MakeRule("introduce").required().range(100).get()],
-  types: [new MakeRule("types").required().range(60).get()],
-  tags: [new MakeRule("tags").required().range(60).get()],
-  cover: [new MakeRule("cover").required().range(255).get()],
-  content: [new MakeRule("content").required().get()],
+  types: [new MakeRule("types", "object").required().get()],
+  tags: [new MakeRule("tags", "array").required().get()],
+  cover: [new MakeRule("cover") .get()],
+  content_raw: [new MakeRule("content_raw").required().get()],
   content_html: [new MakeRule("content_html").required().get()],
   visited_counts: [new MakeRule("visited_counts", 'number').required().get()],
   liked_counts: [new MakeRule("liked_counts", 'number').required().get()],
@@ -25,7 +25,7 @@ export interface IArticleParams {
   types: string;
   tags: string;
   cover: string;
-  content: string;
+  content_raw: string;
   content_html: string;
   visited_counts: number;
   liked_counts: number;
@@ -46,7 +46,7 @@ export interface IAddArticleParams {
   types: string;
   tags: string;
   cover: string;
-  content: string;
+  content_raw: string;
   content_html: string;
   is_show: boolean;
 }
@@ -57,7 +57,7 @@ export const IAddArticleRules: Rules = {
   types: IArticleRules.types,
   tags: IArticleRules.tags,
   cover: IArticleRules.cover,
-  content: IArticleRules.content,
+  content_raw: IArticleRules.content_raw,
   content_html: IArticleRules.content_html,
   is_show: IArticleRules.is_show,
 };
@@ -69,7 +69,7 @@ export interface ISetArticleParams {
   types: string;
   tags: string;
   cover: string;
-  content: string;
+  content_raw: string;
   content_html: string;
   is_show: boolean;
 }
@@ -81,7 +81,7 @@ export const ISetArticleRules: Rules = {
   types: IArticleRules.types,
   tags: IArticleRules.tags,
   cover: IArticleRules.cover,
-  content: IArticleRules.content,
+  content_raw: IArticleRules.content_raw,
   content_html: IArticleRules.content_html,
   is_show: IArticleRules.is_show,
 };

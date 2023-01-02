@@ -17,7 +17,9 @@ class TypeService {
   /**
    * 获取标签
    */
-  getForBackend(current: number, pageSize: number, params?: WhereOptions) {
+  getForBackend(current?: number, pageSize?: number, params?: WhereOptions) {
+    if(!current || !pageSize) {return Type.findAll()}
+    // @ts-ignore
     return Type.findAll({
       offset: (current - 1) * pageSize,
       limit: pageSize,
@@ -41,8 +43,8 @@ class TypeService {
    * @param is_show
    */
   addType(name: string, label: string, color: string, is_show: boolean) {
-    const id = getTimeStamps();
-    return Type.create({ id, name, label, color, is_show });
+    // const id = getTimeStamps();
+    return Type.create({ name, label, color, is_show });
   }
 
   /**

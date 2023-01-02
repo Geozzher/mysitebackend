@@ -23,7 +23,10 @@ class TypeController {
    */
   async getForBackend(ctx: Context) {
     const {data, error} = await validator<IPageInfoParams>(ctx, IPageInfoRules);
-    if (error !== null) return fail(ctx, error);
+    if (error !== null) {
+      const data = await TypeService.getForBackend();
+      return success(ctx, data);
+    };
     const {current, pageSize} = data;
 
     const tags = await TypeService.getForBackend(Number(current), Number(pageSize));

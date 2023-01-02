@@ -1,5 +1,6 @@
 import Schema, {Rules, Values} from "async-validator";
 import {Context} from "koa";
+import {getPostParams, getQueryParams} from "./getRequestParams";
 
 /**
  * 参数检验器，校验content-type=application/json的post请求，参数从request.body里取
@@ -14,10 +15,10 @@ async function validate<T extends Values>(ctx: Context, rules: Rules, flag: bool
 
   switch (ctx.method) {
     case "GET":
-      data = getQueryData(ctx)
+      data = getQueryParams(ctx)
       break;
     case "POST":
-      data = getPostData(ctx)
+      data = getPostParams(ctx)
       break
     case "DELETE":
       break
@@ -41,15 +42,6 @@ async function validate<T extends Values>(ctx: Context, rules: Rules, flag: bool
       }
     }
   })
-}
-
-
-function getPostData(ctx: Context) {
-  return {...ctx.request.body}
-}
-
-function getQueryData(ctx: Context) {
-  return {...ctx.request.query}
 }
 
 export default validate

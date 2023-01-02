@@ -10,6 +10,7 @@ import {
   IPageInfoParams,
   IPageInfoRules
 } from "../constant/rules";
+import TypeService from "../service/TypeService";
 
 class TagController {
   async getForFront(ctx: Context) {
@@ -18,11 +19,11 @@ class TagController {
   }
 
   async getForBackend(ctx: Context) {
-    const { data, error } = await validator<IPageInfoParams>(
-      ctx,
-      IPageInfoRules
-    );
-    if (error !== null) return fail(ctx, error);
+    const { data, error } = await validator<IPageInfoParams>(ctx, IPageInfoRules);
+    if (error !== null) {
+      const data = await TagService.getForBackend();
+      return success(ctx, data);
+    };
     const { current, pageSize } = data;
 
     const tags = await TagService.getForBackend(Number(current), Number(pageSize));

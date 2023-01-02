@@ -16,7 +16,8 @@ class TagService {
   /**
    * 获取标签
    */
-  getForBackend(current: number, pageSize: number, params?: WhereOptions) {
+  getForBackend(current?: number, pageSize?: number, params?: WhereOptions) {
+    if(!current || !pageSize) return Tag.findAll()
     return Tag.findAll({
       offset: (current - 1) * pageSize,
       limit: pageSize,
@@ -41,9 +42,8 @@ class TagService {
    * @param is_show
    */
   addTag(name: string, label: string, color: string, is_show: boolean) {
-    const id = getTimeStamps();
+    // const id = getTimeStamps();
     return Tag.create({
-      id,
       name,
       label,
       color,

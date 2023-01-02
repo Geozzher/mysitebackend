@@ -7,5 +7,6 @@ router.get("/getArticleListForBackend.json", ArticleController.getListForBackend
 router.get("/queryOne.json", ArticleController.getDetail);
 router.post("/addOne.json", ArticleController.add);
 router.post("/modifyArticle.json", ArticleController.set);
+router.get("/updateViews.json", ArticleController.updateViews);
 
 module.exports = router;

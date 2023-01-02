@@ -1,6 +1,16 @@
 import dotenv from "dotenv";
+import path from "path";
+const envConfig = dotenv.config({
+  path: path.resolve(__dirname, '../.env'), // 配置文件路径
+  encoding: 'utf8', // 编码方式，默认utf8
+  debug: false, // 是否开启debug，默认false
+}).parsed;
 
-dotenv.config();
+if (!envConfig) {
+  console.log('配置文件不存在');
+  // 退出程序
+  process.exit(1);
+}
 import db from "../app/db";
 
 db();

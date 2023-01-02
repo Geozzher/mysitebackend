@@ -1,7 +1,8 @@
 import Article from "../model/Article";
 import {getTimeStamps} from "../../utils/dateTime";
-import {WhereOptions} from "sequelize";
+import {where, WhereOptions} from "sequelize";
 import {IAddArticleParams, ISetArticleParams} from "../constant/rules";
+import sequelize from 'sequelize';
 
 class ArticleService {
   /**
@@ -9,7 +10,13 @@ class ArticleService {
    */
   getListForFront(current: number, pageSize: number, params?: WhereOptions) {
     return Article.findAll({
-      attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
+      // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
+      attributes: {
+        include: [
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('updated_at'), '%Y-%m-%d %H:%i:%s'), 'updated_at'],
+        ]
+      },
       offset: (current - 1) * pageSize,
       limit: pageSize,
       where: {
@@ -24,7 +31,13 @@ class ArticleService {
    */
   getListForBackend(current: number, pageSize: number, params?: WhereOptions) {
     return Article.findAll({
-      attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
+      attributes: {
+        include: [
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('updated_at'), '%Y-%m-%d %H:%i:%s'), 'updated_at'],
+        ]
+      },
+      // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
       offset: (current - 1) * pageSize,
       limit: pageSize,
       where: params || {},
@@ -36,7 +49,13 @@ class ArticleService {
    */
   getDetail(id: string) {
     return Article.findOne({
-      attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show', 'content', 'content_html'],
+      attributes: {
+        include: [
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('updated_at'), '%Y-%m-%d %H:%i:%s'), 'updated_at'],
+        ]
+      },
+      // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show', 'content_raw', 'content_html'],
       where: {id: id}
     });
   }
@@ -51,12 +70,8 @@ class ArticleService {
    * 增加一篇文章
    */
   addArticle(article: IAddArticleParams) {
-    const id = getTimeStamps();
     return Article.create({
-      id,
       ...article,
-      visited_counts: 0,
-      like_counts: 0,
     });
   }
 
@@ -68,6 +83,13 @@ class ArticleService {
       {...article},
       {where: {id: article.id}}
     );
+  }
+
+  updateViews({id}: { id: string }) {
+    return Article.update({
+        visited_counts: sequelize.literal('visited_counts+1')
+      }, {where: {id}}
+    )
   }
 }
 

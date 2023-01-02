@@ -7,7 +7,8 @@ const sequelize = new Sequelize(config.db.db_name as string, config.db.db_user a
   host: config.db.db_host,
   port: config.db.db_port as unknown as number,
   dialect: 'mysql',
-  logging: log => dbLogger.error(log),
+  timezone:'+08:00',
+  logging: log => dbLogger.info(log),
   define: {
     timestamps: true,
     createdAt: 'created_at',
@@ -15,6 +16,7 @@ const sequelize = new Sequelize(config.db.db_name as string, config.db.db_user a
     deletedAt: 'deleted_at'
   },
   models: [path.join(__dirname, '..', 'model/**/*.ts'), path.join(__dirname, '..', 'model/**/*.js')]
+
 })
 
 const db = async () => {
