@@ -34,4 +34,7 @@ export default class Article extends Model {
 
   @Column({type: DataType.BOOLEAN})
   is_show!: boolean
+
+  @Column({type: DataType.STRING})
+  article_updated_at!: string
 }

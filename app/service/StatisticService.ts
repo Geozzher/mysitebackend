@@ -22,8 +22,7 @@ class StatisticService {
     // @ts-ignore
     const dbField = tracertMap[field];
     if (!dbField) return [0];
-    const id = getDate();
-    console.log('===id', id)
+    const id =  getDate();
     const [affectRows] = await this.update(id, dbField)
     if (affectRows) {
       return [affectRows]
