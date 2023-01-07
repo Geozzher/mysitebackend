@@ -31,6 +31,7 @@ app
       formidable: {
         maxFieldsSize: 200 * 1024 * 1024, // 设置上传文件大小
       },
+      jsonLimit: 50 * 1024 * 1024
     })
   )
   .use(AccessLogMiddleware);
