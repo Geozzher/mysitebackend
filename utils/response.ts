@@ -28,7 +28,7 @@ export const pageInfoSuccess = (ctx: Context, data: any = {}, pageInfo: any = {}
   }
 }
 
-export const fail = (ctx: Context, msg: string = 'failed', data = {}, code: number = 1) => {
+export const fail = (ctx: Context, msg: string = 'failed', data = null, code: number = 1) => {
   ctx.body = {
     code,
     stat: 'failed',

@@ -13,8 +13,8 @@ class ArticleService {
       // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
       attributes: {
         include: [
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y-%m-%d %H:%i:%s'), 'article_updated_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
         ],
         exclude: ['updated_at']
       },
@@ -34,8 +34,8 @@ class ArticleService {
     return Article.findAll({
       attributes: {
         include: [
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y-%m-%d %H:%i:%s'), 'article_updated_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
         ],
         exclude: ['updated_at']
       },
@@ -49,17 +49,17 @@ class ArticleService {
   /**
    * 获取文章详情
    */
-  getDetail(id: string) {
+  getDetail(id: string, whereOptions: {} = {}) {
     return Article.findOne({
       attributes: {
         include: [
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y-%m-%d %H:%i:%s'), 'created_at'],
-          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y-%m-%d %H:%i:%s'), 'article_updated_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
         ],
         exclude: ['updated_at']
       },
       // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show', 'content_raw', 'content_html'],
-      where: {id: id}
+      where: {id: id, ...whereOptions}
     });
   }
 

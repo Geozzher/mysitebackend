@@ -10,6 +10,7 @@ import {
 } from "../constant/rules";
 import StatisticService from "../service/StatisticService";
 import {T_B_ARTICLE_DETAIL, T_B_ARTICLE_LIST} from "../constant/tracertsMap";
+import {SEARCHDATA_IS_NULL} from "../constant/handleError";
 
 class ArticleController {
   /**
@@ -53,7 +54,24 @@ class ArticleController {
     // 文章详情页访问
     await StatisticService.updateViewCounts(T_B_ARTICLE_DETAIL);
 
+    const articleDetail = await ArticleService.getDetail(id, {is_show: true});
+    if (articleDetail === null) return fail(ctx, SEARCHDATA_IS_NULL)
+    success(ctx, articleDetail);
+  }
+
+  /**
+   * 获取文章详情
+   * @param ctx
+   */
+  async getDetailForBackend(ctx: Context) {
+    const {data, error} = await validator<IGetArticleDetailParams>(ctx, IGetArticleDetailRules);
+    if (error !== null) return fail(ctx, error);
+    const {id} = data;
+    // 文章详情页访问
+    await StatisticService.updateViewCounts(T_B_ARTICLE_DETAIL);
+
     const articleDetail = await ArticleService.getDetail(id);
+    if (articleDetail === null) return fail(ctx, SEARCHDATA_IS_NULL)
     success(ctx, articleDetail);
   }
 
