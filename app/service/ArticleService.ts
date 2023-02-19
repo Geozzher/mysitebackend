@@ -1,7 +1,7 @@
-import Article from "../model/Article";
-import {getDateTime} from "../../utils/dateTime";
-import {WhereOptions} from "sequelize";
-import {IAddArticleParams, ISetArticleParams} from "../constant/rules";
+import Article from '../model/Article';
+import {getDateTime} from '../../utils/dateTime';
+import {WhereOptions} from 'sequelize';
+import {IAddArticleParams, ISetArticleParams} from '../constant/rules';
 import sequelize from 'sequelize';
 
 class ArticleService {
@@ -16,7 +16,7 @@ class ArticleService {
           [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
           [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
         ],
-        exclude: ['updated_at']
+        exclude: ['updated_at', 'content_html', 'content_raw', 'is_show']
       },
       offset: (current - 1) * pageSize,
       limit: pageSize,
