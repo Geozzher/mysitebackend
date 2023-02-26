@@ -70,7 +70,7 @@ class ArticleController {
     // 文章详情页访问
     await StatisticService.updateViewCounts(T_B_ARTICLE_DETAIL);
 
-    const articleDetail = await ArticleService.getDetail(id);
+    const articleDetail = await ArticleService.getDetailForBackend(id);
     if (articleDetail === null) return fail(ctx, SEARCHDATA_IS_NULL)
     success(ctx, articleDetail);
   }

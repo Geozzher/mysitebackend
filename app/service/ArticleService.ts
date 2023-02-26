@@ -37,7 +37,7 @@ class ArticleService {
           [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
           [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
         ],
-        exclude: ['updated_at']
+        exclude: ['updated_at', 'content_html', 'content_raw']
       },
       // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show'],
       offset: (current - 1) * pageSize,
@@ -50,6 +50,23 @@ class ArticleService {
    * 获取文章详情
    */
   getDetail(id: string, whereOptions: {} = {}) {
+    return Article.findOne({
+      attributes: {
+        include: [
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('created_at'), '%Y年%m月%d日 %H:%i:%s'), 'created_at'],
+          [sequelize.Sequelize.fn('date_format', sequelize.Sequelize.col('article_updated_at'), '%Y年%m月%d日 %H:%i:%s'), 'article_updated_at'],
+        ],
+        exclude: ['updated_at', 'content_raw']
+      },
+      // attributes: ['id', 'title', 'introduce', 'types', 'tags', 'cover', 'visited_counts', 'liked_counts', 'is_show', 'content_raw', 'content_html'],
+      where: {id: id, ...whereOptions}
+    });
+  }
+
+  /**
+   * 获取文章详情
+   */
+  getDetailForBackend(id: string, whereOptions: {} = {}) {
     return Article.findOne({
       attributes: {
         include: [
