@@ -10,7 +10,7 @@ import {whiteListRoutes} from "./constant";
  * @constructor
  */
 async function Index(ctx: Context, next: Next) {
-  if (whiteListRoutes.includes((ctx.originalUrl))){
+  if (whiteListRoutes.includes((ctx.originalUrl.split('?')[0]))){
     return next()
   }
   const SESSION_ID = ctx.cookies.get('SESSION_ID');
