@@ -8,6 +8,6 @@ router.post("/loginout.json", UserController.loginOut);
 router.post("/update.json", UserController.update);
 router.post("/delete.json", UserController.delete);
 router.post("/single.json", UserController.findAdminById);
-router.post("/verify.json", UserController.verify);
-
+router.get("/sessionCheck.json", UserController.sessionCheck);
+router.get("/verify.json", UserController.verify);
 module.exports = router;

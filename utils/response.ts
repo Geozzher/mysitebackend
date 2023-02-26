@@ -36,3 +36,11 @@ export const fail = (ctx: Context, msg: string = 'failed', data = null, code: nu
     data
   }
 }
+
+export const authFail = (ctx: Context) => {
+  ctx.body = {
+    code: 500001,
+    stat: 'deny',
+    msg: "NOT_LOGIN",
+  }
+}

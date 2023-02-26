@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
-const envPath = process.env.NODE_ENV === 'production' ? '../env.remote': '../env'
+
+const envPath = process.env.NODE_ENV === 'production' ? '../env.remote' : '../env'
 const envConfig = dotenv.config({
   path: path.resolve(__dirname, envPath), // 配置文件路径
   encoding: 'utf8', // 编码方式，默认utf8
@@ -17,7 +18,7 @@ import db from "../app/db";
 db();
 
 import Koa from "koa";
-import { Server } from "http";
+import {Server} from "http";
 import AccessLogMiddleware from "./middleware/AccessLogMiddleware";
 import AuthMiddleware from "./middleware/AuthMiddleware";
 import koaBody from "koa-body";
@@ -34,8 +35,8 @@ app
       jsonLimit: 50 * 1024 * 1024
     })
   )
-  .use(AccessLogMiddleware);
-// .use(AuthMiddleware)
+  .use(AccessLogMiddleware)
+  .use(AuthMiddleware)
 // .use(router.routes())
 
 // 注册路由

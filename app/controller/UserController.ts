@@ -1,7 +1,7 @@
-import { Context } from "koa";
+import {Context} from "koa";
 import validator from "../../utils/validate";
-import { fail, success } from "../../utils/response";
-import { AES, AESparse } from "../../utils/hash";
+import {fail, success} from "../../utils/response";
+import {AES, AESparse} from "../../utils/hash";
 import UserService from "../service/UserService";
 import * as Tips from "../constant/handleError";
 import {
@@ -20,13 +20,11 @@ import {
   setToken,
   tokenSign,
   tokenValidate,
-  tokenVerify,
 } from "../../utils/token";
-import { tokenToString } from "typescript";
 
 class UserController {
   async register(ctx: Context) {
-    const { data, error } = await validator<IRegister>(ctx, IRegisterRules);
+    const {data, error} = await validator<IRegister>(ctx, IRegisterRules);
     if (error !== null) return fail(ctx, error);
 
     const user: User | null = await UserService.getUserByName(data.username);
@@ -47,13 +45,13 @@ class UserController {
   }
 
   async loginOut(ctx: Context) {
-    const { username } = ctx.request.body;
+    const {username} = ctx.request.body;
     deleteToken(username);
     return success(ctx, Tips.LOGIN_OUT);
   }
 
   async login(ctx: Context) {
-    const { data, error } = await validator<ILogin>(ctx, ILoginRules);
+    const {data, error} = await validator<ILogin>(ctx, ILoginRules);
     if (error !== null) {
       return fail(ctx, error);
     }
@@ -66,14 +64,18 @@ class UserController {
     if (AESparse(user.password) !== data.password) {
       return fail(ctx, Tips.LOGIN_FAILED);
     }
+
+    const userId = AES(user.id);
     // redis中写入token
-    setToken(ctx, tokenSign({ username: data.username }), data.username);
+    setToken(ctx, tokenSign({userId: user.id}), userId);
+
+    ctx.cookies.set('SESSION_ID', userId);
     // 此处可埋点统计登录人数
     return success(ctx, {}, Tips.LOGIN_OK);
   }
 
   async update(ctx: Context) {
-    const { data, error } = await validator<IUpdateAdmin>(
+    const {data, error} = await validator<IUpdateAdmin>(
       ctx,
       IUpdateAdminRules
     );
@@ -94,7 +96,7 @@ class UserController {
   }
 
   async delete(ctx: Context) {
-    const { data, error } = await validator<IDeleteAdmin>(
+    const {data, error} = await validator<IDeleteAdmin>(
       ctx,
       IDeleteAdminRules
     );
@@ -110,7 +112,7 @@ class UserController {
   }
 
   async findAdminById(ctx: Context) {
-    const { data, error } = await validator<IDeleteAdmin>(
+    const {data, error} = await validator<IDeleteAdmin>(
       ctx,
       IDeleteAdminRules
     );
@@ -129,28 +131,32 @@ class UserController {
 
   // 在Redis中验证token和username是否一致
   async verify(ctx: Context) {
-    const { token, username } = ctx.request.header;
-    const { routeCode } = ctx.request.body;
-    if (!token || !username) return fail(ctx, "缺少有效的校验信息");
-
-    // 验证token
-    // @ts-ignore
-    const { user, error } = await tokenValidate(
-      token.toString(),
-      username.toString()
-    );
-    if (user == null) {
-      return fail(ctx, error?.message);
-    }
+    const { userId, routeCode } = ctx.request.body;
 
     // 验证permission
     const permissions = await UserService.getUserPermissions(
-      username.toString()
+      userId
     );
     if (!permissions.includes(routeCode)) {
       return fail(ctx, Tips.TOKEN_IS_UNDEFINED);
     }
 
+    return success(ctx);
+  }
+
+  // 在Redis中验证token和username是否一致
+  async sessionCheck(ctx: Context) {
+    // @ts-ignore
+    const {SESSION_ID} = ctx.cookies;
+    const {token} = ctx.request.header;
+    if (!SESSION_ID || !token) {
+      return fail(ctx)
+    }
+    // @ts-ignore
+    const {user} = await tokenValidate(token, SESSION_ID)
+    if (!user) {
+      return fail(ctx)
+    }
     return success(ctx);
   }
 }

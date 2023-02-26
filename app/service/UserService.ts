@@ -47,11 +47,11 @@ class UserService {
     })
   }
 
-  async getUserPermissions(username: string): Promise<string[]> {
+  async getUserPermissions(userId: string): Promise<string[]> {
     const userPermission = await User.findOne({
       attributes: ["permission"],
       where: {
-        username: username
+        userId
       }
     })
 
