@@ -10,7 +10,7 @@ import {whiteListRoutes} from "./constant";
  * @constructor
  */
 async function Index(ctx: Context, next: Next) {
-  if (whiteListRoutes.includes((ctx.originalUrl.split('?')[0]))){
+  if (whiteListRoutes.includes((ctx.originalUrl.split('?')[0]))) {
     return next()
   }
   const SESSION_ID = ctx.cookies.get('SESSION_ID');
@@ -19,12 +19,12 @@ async function Index(ctx: Context, next: Next) {
     return authFail(ctx)
   }
   // @ts-ignore
-  const {user: {userId}} = await tokenValidate(token, SESSION_ID)
-  if (!userId) {
+  const {user} = await tokenValidate(token, SESSION_ID)
+  if (!user) {
     return authFail(ctx)
   }
   const requestBody = ctx.request.body;
-  ctx.request.body = {...requestBody, userId}
+  ctx.request.body = {...requestBody, userId: user.userId}
   return next()
 }
 
